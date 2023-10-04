@@ -1,0 +1,31 @@
+version: '3'
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - 5000:5000
+    volumes:
+      - .:/app
+      - /app/node_modules
+    depends_on:
+      - mongo
+    networks:
+      - node-network
+
+  mongo:
+    image: mongo:latest
+    ports:
+      - 27017:27017
+    environment:
+      - MONGODB_URI=mongodb://host.docker.internal:27017/todo-list
+    volumes:
+      - ./data:/data/db
+    networks:
+      - node-network
+
+networks:
+  node-network:
+    driver: bridge
